@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { BehaviorSubject } from 'rxjs';
+import { CategoryService, Category } from './category.service';
 
 export interface Task {
   id: number;
   title: string;
   completed: boolean;
+  categoryId: number;
+  categoryName: string;
 }
 
 @Injectable({
@@ -13,10 +16,15 @@ export interface Task {
 })
 export class TaskService {
   private tasks: Task[] = [];
-  private tasksSubject: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  public tasksSubject: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>(
+    []
+  );
   private _storage: Storage | null = null;
 
-  constructor(private storage: Storage) {
+  constructor(
+    private storage: Storage,
+    private categoryService: CategoryService
+  ) {
     this.init();
   }
 
@@ -34,31 +42,48 @@ export class TaskService {
     return this.tasksSubject.asObservable();
   }
 
-  async addTask(title: string) {
-    const newTask: Task = {
-      id: Date.now(),
-      title,
-      completed: false,
-    };
-    this.tasks.push(newTask);
-    await this.saveTasks();
+  async addTask(title: string, categoryId: number) {
+    this.categoryService.getCategories().subscribe((categories) => {
+      const selectedCategory = categories.find((c) => c.id === categoryId);
+      const categoryName = selectedCategory ? selectedCategory.name : 'Ninguna';
+
+      const newTask: Task = {
+        id: Date.now(),
+        title,
+        completed: false,
+        categoryId,
+        categoryName,
+      };
+
+      this.tasks.push(newTask);
+      this.saveTasks();
+      this.tasksSubject.next(this.tasks); // Notificar los cambios
+    });
   }
 
   async removeTask(id: number) {
-    this.tasks = this.tasks.filter(task => task.id !== id);
+    this.tasks = this.tasks.filter((task) => task.id !== id);
     await this.saveTasks();
   }
 
-  async toggleTaskCompletion(id: number) {
-    const task = this.tasks.find(task => task.id === id);
+  async toggleTask(id: number) {
+    const task = this.tasks.find((task) => task.id === id);
     if (task) {
       task.completed = !task.completed;
       await this.saveTasks();
     }
   }
+  toggleTaskCompletion(taskId: number) {
+    const taskIndex = this.tasks.findIndex((task) => task.id === taskId);
+    if (taskIndex > -1) {
+      this.tasks[taskIndex].completed = !this.tasks[taskIndex].completed;
+      this.tasksSubject.next(this.tasks); // Actualizar la lista de tareas
+      this.saveTasks(); // Guardar los cambios si es necesario
+    }
+  }
 
   private async saveTasks() {
     await this._storage?.set('tasks', this.tasks);
-    this.tasksSubject.next(this.tasks); // Emitir nueva lista de tareas
+    this.tasksSubject.next(this.tasks);
   }
 }

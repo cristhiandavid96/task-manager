@@ -23,10 +23,14 @@ export class CategoryService {
     const storage = await this.storage.create();
     this._storage = storage;
     const storedCategories = await this._storage.get('categories');
-    if (storedCategories) {
+    if (storedCategories && storedCategories.length > 0) {
       this.categories = storedCategories;
-      this.categoriesSubject.next(this.categories);
+    } else {
+      // Crear categoría por defecto "Ninguna" si no hay categorías
+      this.categories = [{ id: Date.now(), name: 'Ninguna' }];
+      await this.saveCategories();
     }
+    this.categoriesSubject.next(this.categories);
   }
 
   getCategories() {
