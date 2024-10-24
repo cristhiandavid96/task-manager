@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import { BehaviorSubject } from 'rxjs';
 
 export interface Task {
   id: number;
@@ -12,6 +13,7 @@ export interface Task {
 })
 export class TaskService {
   private tasks: Task[] = [];
+  private tasksSubject: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
   private _storage: Storage | null = null;
 
   constructor(private storage: Storage) {
@@ -24,11 +26,12 @@ export class TaskService {
     const storedTasks = await this._storage.get('tasks');
     if (storedTasks) {
       this.tasks = storedTasks;
+      this.tasksSubject.next(this.tasks);
     }
   }
 
   getTasks() {
-    return this.tasks;
+    return this.tasksSubject.asObservable();
   }
 
   async addTask(title: string) {
@@ -46,7 +49,7 @@ export class TaskService {
     await this.saveTasks();
   }
 
-  async toggleTask(id: number) {
+  async toggleTaskCompletion(id: number) {
     const task = this.tasks.find(task => task.id === id);
     if (task) {
       task.completed = !task.completed;
@@ -56,5 +59,6 @@ export class TaskService {
 
   private async saveTasks() {
     await this._storage?.set('tasks', this.tasks);
+    this.tasksSubject.next(this.tasks); // Emitir nueva lista de tareas
   }
 }
