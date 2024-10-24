@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Task Manager</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-input placeholder="New Task" [(ngModel)]="taskTitle"></ion-input>
+    <ion-button (click)="addTask()" color="secondary">Add</ion-button>
+  </ion-item>
+
+  <ion-list>
+    <ion-item *ngFor="let task of tasks">
+      <ion-label [class.completed]="task.completed">{{ task.title }}</ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="toggleTask(task.id)" color="success">
+          <ion-icon [name]="task.completed ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+        </ion-button>
+        <ion-button (click)="removeTask(task.id)" color="danger">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>
