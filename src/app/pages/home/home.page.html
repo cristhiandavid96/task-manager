@@ -25,19 +25,22 @@
 
   <ion-button expand="block" (click)="addTask()" color="secondary">Agregar</ion-button>
 
-  <ion-item>
-    <ion-label>
-      <h1>Filtrar Categoria : </h1>
-    </ion-label>
-  </ion-item>
-  <ion-item class="ion-margin-bottom">
-    <ion-select placeholder="Filtrar por Categoría" [(ngModel)]="filterCategoryId" (ionChange)="filterTasks()">
-      <ion-select-option [value]="null">Todas</ion-select-option>
-      <ion-select-option *ngFor="let category of categories$ | async" [value]="category.id">
-        {{ category.name }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
+  <div *ngIf="newFeatureEnabled">
+    <ion-item>
+      <ion-label>
+        <h1>Filtrar Categoria : </h1>
+      </ion-label>
+    </ion-item>
+    <ion-item class="ion-margin-bottom">
+      <ion-select placeholder="Filtrar por Categoría" [(ngModel)]="filterCategoryId" (ionChange)="filterTasks()">
+        <ion-select-option [value]="null">Todas</ion-select-option>
+        <ion-select-option *ngFor="let category of categories$ | async" [value]="category.id">
+          {{ category.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+  
 
   <ion-item>
     <ion-label>

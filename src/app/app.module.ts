@@ -8,6 +8,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { TabsModule } from './components/tabs/tabs.module';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireRemoteConfigModule } from '@angular/fire/compat/remote-config';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,6 +20,8 @@ import { TabsModule } from './components/tabs/tabs.module';
     IonicModule.forRoot(),
     AppRoutingModule,
     IonicStorageModule.forRoot(),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireRemoteConfigModule // Importar Remote Config
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

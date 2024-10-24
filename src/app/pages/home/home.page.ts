@@ -2,12 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { TaskService, Task } from 'src/app/services/task.service';
 import { CategoryService, Category } from 'src/app/services/category.service';
 import { map, Observable, of } from 'rxjs';
+import { FeatureFlagService } from '../../services/feature-flag.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
+
+  public newFeatureEnabled: boolean = true;
+
   tasks$: Observable<Task[]> = of([]);
   categories$: Observable<Category[]> = of([]);
   filteredTasks$: Observable<Task[]> = of([]); // Lista de tareas filtradas
@@ -16,14 +21,14 @@ export class HomePage implements OnInit {
   filterCategoryId: number | null = null; // Categoría seleccionada para el filtro
 
 
-  constructor(private taskService: TaskService, private categoryService: CategoryService) {}
+  constructor(private taskService: TaskService,private featureFlagService: FeatureFlagService, private categoryService: CategoryService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.tasks$ = this.taskService.getTasks();
     this.categories$ = this.categoryService.getCategories();
     this.filteredTasks$ = this.tasks$;
-
-    // Filtrar tareas si cambia la lista original de tareas
+    this.newFeatureEnabled = await this.featureFlagService.isNewFeatureEnabled();
+    console.log('newFeatureEnabled',this.newFeatureEnabled);
     this.tasks$.subscribe(tasks => {
       this.applyFilter(tasks);
     });
