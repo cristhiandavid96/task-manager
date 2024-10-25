@@ -11,7 +11,7 @@ import { FeatureFlagService } from '../../services/feature-flag.service';
 })
 export class HomePage implements OnInit {
 
-  public newFeatureEnabled: boolean = true;
+  public newFeatureEnabled: boolean = false;
 
   tasks$: Observable<Task[]> = of([]);
   categories$: Observable<Category[]> = of([]);
@@ -29,6 +29,7 @@ export class HomePage implements OnInit {
     this.filteredTasks$ = this.tasks$;
     this.newFeatureEnabled = await this.featureFlagService.isNewFeatureEnabled();
     console.log('newFeatureEnabled',this.newFeatureEnabled);
+    // Filtrar tareas si cambia la lista original de tareas
     this.tasks$.subscribe(tasks => {
       this.applyFilter(tasks);
     });

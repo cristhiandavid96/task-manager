@@ -12,6 +12,12 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireRemoteConfigModule } from '@angular/fire/compat/remote-config';
 import { environment } from '../environments/environment';
 
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import {
+  provideRemoteConfig,
+  getRemoteConfig,
+} from '@angular/fire/remote-config';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -21,9 +27,13 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireRemoteConfigModule // Importar Remote Config
+    AngularFireRemoteConfigModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideRemoteConfig(() => getRemoteConfig()),
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
