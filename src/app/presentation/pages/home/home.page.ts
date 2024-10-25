@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskService, Task } from 'src/app/services/task.service';
-import { CategoryService, Category } from 'src/app/services/category.service';
+import { TaskService, Task } from 'src/app/data/services/task.service';
+import { CategoryService, Category } from 'src/app/data/services/category.service';
 import { map, Observable, of } from 'rxjs';
-import { FeatureFlagService } from '../../services/feature-flag.service';
+import { FeatureFlagService } from 'src/app/data/services/feature-flag.service';
 
 @Component({
   selector: 'app-home',

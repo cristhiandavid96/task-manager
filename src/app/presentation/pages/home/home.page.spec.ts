@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { HomePage } from './home.page';
-import { TaskService } from '../../services/task.service'; // Asegúrate de que la ruta sea correcta
+import { TaskService } from 'src/app/data/services/task.service'; // Asegúrate de que la ruta sea correcta
 import { Storage } from '@ionic/storage-angular';
-import { FeatureFlagService } from '../../services/feature-flag.service'; // Asegúrate de que la ruta sea correcta
+import { FeatureFlagService } from 'src/app/data/services/feature-flag.service'; // Asegúrate de que la ruta sea correcta
 import { RemoteConfig } from '@angular/fire/remote-config';
 class RemoteConfigMock {
   private values: { [key: string]: any } = {};

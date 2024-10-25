@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CategoriesPage } from './categories.page';
-import { CategoryService } from '../../services/category.service'; // Asegúrate de que la ruta sea correcta
+import { CategoryService } from 'src/app/data/services/category.service'; // Asegúrate de que la ruta sea correcta
 import { Storage } from '@ionic/storage-angular';
 
 class StorageMock {
