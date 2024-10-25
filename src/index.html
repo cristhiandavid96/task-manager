@@ -20,6 +20,10 @@
 </head>
 
 <body>
+  <script type="application/json" data-flag-values>
+    import { safeJsonStringify } from '@vercel/flags';
+    ${safeJsonStringify({ exampleFlag: true })}
+  </script>;
   <app-root></app-root>
 </body>
 
