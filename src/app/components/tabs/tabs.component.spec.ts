@@ -1,22 +1,26 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
+import { TestBed } from '@angular/core/testing';
 import { TabsComponent } from './tabs.component';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
+class ActivatedRouteMock {
+  // Puedes agregar otros parámetros que necesites simular
+  params = of({}); // Simula los parámetros de la ruta
+}
 describe('TabsComponent', () => {
   let component: TabsComponent;
-  let fixture: ComponentFixture<TabsComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabsComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [TabsComponent],
+      providers: [
+        { provide: ActivatedRoute, useClass: ActivatedRouteMock }  // Proveer el mock
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TabsComponent);
+    const fixture = TestBed.createComponent(TabsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -42,7 +42,7 @@ export class TaskService {
     return this.tasksSubject.asObservable();
   }
 
-  async addTask(title: string, categoryId: number) {
+  async addTask(title: string, categoryId: number = 1) {
     this.categoryService.getCategories().subscribe((categories) => {
       const selectedCategory = categories.find((c) => c.id === categoryId);
       const categoryName = selectedCategory ? selectedCategory.name : 'Ninguna';
