@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { CategoryService, Category } from './category.service';
 
 export interface Task {
@@ -43,22 +43,26 @@ export class TaskService {
   }
 
   async addTask(title: string, categoryId: number = 1) {
-    this.categoryService.getCategories().subscribe((categories) => {
-      const selectedCategory = categories.find((c) => c.id === categoryId);
-      const categoryName = selectedCategory ? selectedCategory.name : 'Ninguna';
+    const categories = await firstValueFrom(
+      this.categoryService.getCategories()
+    );
 
-      const newTask: Task = {
-        id: Date.now(),
-        title,
-        completed: false,
-        categoryId,
-        categoryName,
-      };
+    const selectedCategory = categories
+      ? categories.find((c) => c.id === categoryId)
+      : undefined;
+    const categoryName = selectedCategory ? selectedCategory.name : 'Ninguna';
 
-      this.tasks.push(newTask);
-      this.saveTasks();
-      this.tasksSubject.next(this.tasks); // Notificar los cambios
-    });
+    const newTask: Task = {
+      id: Date.now(),
+      title,
+      completed: false,
+      categoryId,
+      categoryName,
+    };
+
+    this.tasks.push(newTask);
+    await this.saveTasks(); // Guardar las tareas
+    this.tasksSubject.next(this.tasks); // Notificar los cambios
   }
 
   async removeTask(id: number) {

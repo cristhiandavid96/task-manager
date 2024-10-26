@@ -28,7 +28,6 @@ export class HomePage implements OnInit {
     this.categories$ = this.categoryService.getCategories();
     this.filteredTasks$ = this.tasks$;
     this.newFeatureEnabled = await this.featureFlagService.isNewFeatureEnabled();
-    console.log('newFeatureEnabled',this.newFeatureEnabled);
     // Filtrar tareas si cambia la lista original de tareas
     this.tasks$.subscribe(tasks => {
       this.applyFilter(tasks);
